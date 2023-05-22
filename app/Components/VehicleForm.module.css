@@ -1,0 +1,64 @@
+.submit{
+    background-color:rgb(63, 201, 63);
+    border-radius:5px;
+    border:none;
+    font-size:14px;
+    cursor:pointer;
+    color:white;
+    margin:4px;
+    padding:4px;
+}
+
+.cancel{
+    background-color:rgb(222, 40, 40);
+    border-radius:5px;
+    border:none;
+    font-size:14px;
+    cursor:pointer;
+    color:white;
+    margin:4px;
+    padding:4px;
+    text-decoration:none;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    margin: 0 auto;
+    width: 300px;
+  }
+
+  .form label{
+    padding:10px;
+    font-size:22px;
+  }
+
+  .form input{
+    padding:4px;
+    width:70%;
+  }
+
+  .editContainer{
+    background-color: rgb(74, 97, 248);
+    color: white;
+    margin: auto;
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    height:50%;
+    width:30%;
+    border: solid 1px black;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .btnContainer{
+    margin-top:10px;
+  }
+
+  
