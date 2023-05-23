@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo} from "react";
 import Link from "next/link";
 import {
 	deleteRow,
-	getMergedData,
 	getPaginationButtons,
-	getSortedTable,
-	getPaginatedTable
+	getNumberOfRows,
+	updateNumberOfRows,
 } from "../Services/DataProcessingService";
 import VehicleTable from "./VehicleTable";
 
@@ -16,35 +15,29 @@ import styles from "./VehicleTable.module.css";
 import VehicleMergeViewStore from "../Stores/VehicleMergeViewStore";
 
 const MergedTable = () => {
-	const { dir, currentPage, mergedData, paginatedData, setDir, 
-			setCurrentPage, setMergedData, setPaginatedData, search, setSearch } = VehicleMergeViewStore
+	const { currentPage, mergedData, 
+			setCurrentPage, setMergedData,
+			search, setSearch, number, setNumber, 
+			flag, setFlag, fetchData } = VehicleMergeViewStore
+
+			
 	const memoizedCurrentPage = useMemo(() => currentPage, [currentPage]);
-	const memoizedDir = useMemo(() => dir, [dir]);
-
+	
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const data = await getMergedData();
-				const sortedTable = await getSortedTable(dir, data);
-				const data2 = await getPaginatedTable(currentPage, 10, sortedTable);
 
-				setMergedData(data);
-				setPaginatedData(data2);
-				
-			} catch (error) {
-				console.error("Error fetching data: ", error);
-			}
-		};
+		fetchData();}, 
+		[memoizedCurrentPage, mergedData.length, ]
+	);
 
-		fetchData();
-	}, [memoizedCurrentPage, memoizedDir, paginatedData.length]);
 
 	const deleteRowHandler = async (id) => {
 		if (window.confirm("Are you sure you want to delete this row?")) {
+			const newNumberOfRows = number -1;
 			await deleteRow(id);
-			const newData = paginatedData.filter((row) => row.MakeID !== id);
+			await updateNumberOfRows(newNumberOfRows);
+			const newData = mergedData.filter((row) => row.MakeID !== id);
 			
-			setPaginatedData(newData);
+			setMergedData(newData);
 		}
 	};
 
@@ -53,17 +46,20 @@ const MergedTable = () => {
 	};
 
 	const sortToggle = async () => {
-		setDir(dir === "asc" ? "desc" : "asc");
-		const mergedTable = await getMergedData()
-	
-		const sortedTable = await getSortedTable(dir, mergedTable);
-		
-		const paginatedTable = await getPaginatedTable(currentPage, 10, sortedTable)
-	
-		setPaginatedData(paginatedTable);
+		setFlag(!flag);
+		if(!flag){
+			const response = await fetch(`http://localhost:8080/paginateData?pageSize=${10}&page=${currentPage}&sortBy=asc`);
+			const data = await response.json();
+			setMergedData(data);
+		}
+		else{
+			const response = await fetch(`http://localhost:8080/paginateData?pageSize=${10}&page=${currentPage}&sortBy=desc`);
+			const data = await response.json();
+			setMergedData(data);
+		}
 	};
 
-	const pageButtons = getPaginationButtons(mergedData, handlePageChange);
+	const pageButtons = getPaginationButtons(number, handlePageChange);
 
 	const searchHandler = (event) => {
 		setSearch(event.target.value);
@@ -88,7 +84,7 @@ const MergedTable = () => {
 				<button className={styles.sortButton} onClick={sortToggle}>
 					Sort By Make Name
 				</button>
-				<label className={styles.label}>Search: </label>
+				<label className={styles.label}>Search Make Name: </label>
 				<input
 					type="text"
 					className={styles.input}
@@ -100,7 +96,7 @@ const MergedTable = () => {
 					Add Vehicle
 				</Link>
 			</div>
-			<VehicleTable mergedData={paginatedData} onDelete={deleteRowHandler} paginatedData={paginatedData} />
+			<VehicleTable mergedData={mergedData} onDelete={deleteRowHandler} />
 			<div className={styles.paginationContainer}>{pageButtons}</div>
 		</div>
 	);

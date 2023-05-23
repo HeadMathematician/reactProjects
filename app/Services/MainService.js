@@ -30,7 +30,7 @@ const getAllDocuments = async (collectionName) => {
 
 const getDocumentIdByFieldValue = async (collectionName, fieldName, fieldValue) => {
   const q = query(collection(db, collectionName), where(fieldName, "==", fieldValue));
-  const querySnapshot = await getDocs(q);
+  const querySnapshot = await getDocs(q); 
 
   if (querySnapshot.empty) {
     return null;

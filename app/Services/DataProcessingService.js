@@ -1,30 +1,31 @@
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit, startAt, startAfter, getDoc, doc} from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
+import { getDocumentById, updateDocument } from "./MainService";
 import { deleteMake, getMakeDocId } from "../Services/VehicleMakeService";
 import { deleteModel, getModelDocId } from "../Services/VehicleModelService";
+import { deleteMerged, getMergedDocID, getMerged } from "./VehicleMergedService";
 
 import styles from "../Components/VehicleTable.module.css";
 
 import Link from "next/link";
 
-const getFilteredTable = async (value) => {
+const countRef = "SnisbxjkwINE3nl7Nqa8"
+
+const getFilteredTable = async (currentPage, value) => {
 	try {
 		if(value == ""){
-			return await getMergedData();
+			const response = await fetch(`http://localhost:8080/paginateData?pageSize=${10}&page=${currentPage}&sortBy=asc`);
+			const data = await response.json();
+			return data.length;
 		}
 		else{
-		const allData = await getMergedData();
-		const filteredData = allData.filter((doc) => 
-		doc.MakeName.toLowerCase().includes(value.toLowerCase()) ||
-		doc.MakeAbrv.toLowerCase().includes(value.toLowerCase()) ||
-		doc.ModelName.toLowerCase().includes(value.toLowerCase()) ||
-		doc.ModelAbrv.toLowerCase().includes(value.toLowerCase())
+			const allData = await getMerged();
+			const filteredData = allData.filter((doc) => 
+			doc.MakeName.toLowerCase().includes(value.toLowerCase()) 
 		);
-		return filteredData;
+		return filteredData.length;
 		}
-		
-
 		
 	} catch (error) {
 		console.error("Error filtering vehicles:", error);
@@ -32,67 +33,24 @@ const getFilteredTable = async (value) => {
 	}
 };
 
-const getPaginatedTable = async (pageNo, pageSize, table) => {
-	try {
-		const data = table;
-		const startIndex = (pageNo - 1) * pageSize;
-		const endIndex = startIndex + pageSize;
-		return data.slice(startIndex, endIndex);
-	} catch (error) {
-		console.error("Error while pagingating vehicle table: ", error);
-		throw error;
-	}
-};
-
-const getMergedData = async () => {
-	try {
-		const q1 = query(collection(db, "VehicleModel"));
-		const querySnapshot1 = await getDocs(q1);
-		const data1 = [];
-		querySnapshot1.forEach((doc) => {
-			data1.push(doc.data());
-		});
-
-		const q2 = query(collection(db, "VehicleMake"));
-		const querySnapshot2 = await getDocs(q2);
-		const data2 = [];
-		querySnapshot2.forEach((doc) => {
-			data2.push(doc.data());
-		});
-
-		const mergedData = data2.map((make) => {
-			const correspondingModel = data1.find(
-				(model) => model.MakeID === make.MakeID
-			);
-			return { ...make, ...correspondingModel };
-		});
-
-		mergedData.sort((a, b) => a.MakeName.localeCompare(b.MakeName));
-
-		return mergedData;
-	} catch (error) {
-		console.error("Error in getMergedData method: ", error);
-		throw error;
-	}
-};
-
 const getPaginationButtons = (
-	vehicles,
+	number,
 	handlePageChange
   ) => {
-	const totalPages = Math.ceil(vehicles.length / 10);
+	
+	const totalPages = Math.ceil(number / 10);
   
 	const paginationLinks = [...Array(totalPages)].map((_, index) => {
 	  const handleClick = () => handlePageChange(index + 1);
 	  return (
-		<Link
-		  href={`/vehicles/pages?page=${index + 1}`}
+		<button
+		  
 		  className={styles.pageButtons}
 		  key={index}
 		  onClick={handleClick}
 		>
 		  {index + 1}
-		</Link>
+		</button>
 	  );
 	});
   
@@ -100,11 +58,11 @@ const getPaginationButtons = (
   };
 
   const getPagButtonsFilter = (
-	table,
+	number,
 	handlePageChange,
 	searchValue
   ) => {
-	const totalPages = Math.ceil(table.length / 10);
+	const totalPages = Math.ceil(number / 10);
   
 	const paginationLinks = [...Array(totalPages)].map((_, index) => {
 	  const handleClick = () => handlePageChange(index + 1);
@@ -123,36 +81,29 @@ const getPaginationButtons = (
 	return paginationLinks;
   };
   
-
 const deleteRow = async (id) => {
 	const doc1 = await getMakeDocId("MakeID", id);
 	const doc2 = await getModelDocId("MakeID", id);
+	const doc3 = await getMergedDocID("MakeID", id);
 	await deleteMake(doc1);
 	await deleteModel(doc2);
+	await deleteMerged(doc3);
 };
 
-const getSortedTable = async (dir, table) => {
-	try {
-		const data = table;
-		if (dir === "asc") {
-			data.sort((a, b) => a.MakeName.localeCompare(b.MakeName));
-		} else {
-			data.sort((a, b) => b.MakeName.localeCompare(a.MakeName));
-		}
+const getNumberOfRows = async () => {
+	const number = await getDocumentById("VehicleCount", countRef);
+	return number.NumberOfRows;
+}
 
-		return data;
-	} catch (error) {
-		console.error("Error getting sorted vehicles:", error);
-		throw error;
-	}
-};
+const updateNumberOfRows = async (number) => {
+	await updateDocument("VehicleCount", countRef, {NumberOfRows: number})
+}
 
 export {
 	deleteRow,
 	getFilteredTable,
-	getMergedData,
-	getPaginatedTable,
-	getSortedTable,
 	getPaginationButtons,
-	getPagButtonsFilter
+	getPagButtonsFilter,
+	getNumberOfRows,
+	updateNumberOfRows,
 };

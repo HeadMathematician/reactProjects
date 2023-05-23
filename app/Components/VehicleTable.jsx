@@ -1,7 +1,6 @@
 import { observer } from "mobx-react";
 import Link from "next/link";
 import styles from "./VehicleTable.module.css";
-import { toJS } from "mobx";
 
 const VehicleTable = (props) => {
 
@@ -19,9 +18,8 @@ const VehicleTable = (props) => {
 				</tr>
 			</thead>
 			<tbody>
-				{props.paginatedData.map((md) => {
+				{props.mergedData.map((md) => {
 			
-
 					return (
 						<tr key={Math.random() * 100} className={styles.td}>
 							<td>{md.MakeID}</td>

@@ -6,29 +6,32 @@ import {
     deleteDocument,
     getDocumentIdByFieldValue
   } from "./MainService";
+
+  const table = "VehicleModel";
   
   const createModel = async (data) => {
-    await createDocument("VehicleModel", data);
+    await createDocument(table, data);
   };
   
   const getModel = async () => {
-    return await getAllDocuments("VehicleModel");
+    return await getAllDocuments(table);
   };
   
   const getModelById = async (id) => {
-    return await getDocumentById("VehicleModel", id);
+    return await getDocumentById(table, id);
   };
   
   const updateModel = async (id, updatedData) => {
-    await updateDocument("VehicleModel", id, updatedData);
+    await updateDocument(table, id, updatedData);
+    
   };
   
   const deleteModel = async (id) => {
-    await deleteDocument("VehicleModel", id);
+    await deleteDocument(table, id);
   };
 
   const getModelDocId = async(name, value) => {
-    return await getDocumentIdByFieldValue("VehicleModel", name, value)
+    return await getDocumentIdByFieldValue(table, name, value)
   }
   
   export {

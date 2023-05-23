@@ -4,40 +4,20 @@ import styles from './VehicleForm.module.css';
 import Link from 'next/link';
 import { getMakeDocId, getMakeById, updateMake } from '../Services/VehicleMakeService';
 import { getModelDocId, getModelById, updateModel } from '../Services/VehicleModelService';
+import { getMergedDocID, getMergedById, updateMerged } from '../Services/VehicleMergedService';
 import VehicleEditStore from '../Stores/VehicleEditStore';
 
 const VehicleEdit = () => {
   
-  const { modelName, makeName, modelAbrv, makeAbrv, makeDocRef, modelDocRef, setMakeAbrv, 
-    setMakeName, setModelAbrv, setModelName, setMakeDocRef, setModelDocRef } = VehicleEditStore;
+  const { modelName, makeName, modelAbrv, makeAbrv,
+          makeDocRef, modelDocRef, mergedDocRef,
+          setMakeAbrv, setMakeName, setModelAbrv, setModelName,
+          fetchData } = VehicleEditStore;
 
   useEffect(() => {
     
-    
-    const fetch = async () => {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const MAKE_ID = urlParams.get("makeid")
-        const makeDocId = await getMakeDocId("MakeID", MAKE_ID);
-        const fullMakeDoc = await getMakeById(makeDocId);
-        const modelDocId = await getModelDocId("MakeID", MAKE_ID);
-        const fullModelDoc = await getModelById(modelDocId);
-        
-        setMakeDocRef(makeDocId);
-        setModelDocRef(modelDocId);
-        setMakeName(fullMakeDoc.MakeName);
-        setMakeAbrv(fullMakeDoc.MakeAbrv);
-        setModelName(fullModelDoc.ModelName);
-        setModelAbrv(fullModelDoc.ModelAbrv);
-
-       
-        
-      } catch (error) {
-        console.error('Error while fetching :', error);
-      }
-    };
-
-   fetch()
+   
+   fetchData();
     
   }, [ setMakeName, setMakeAbrv, setModelName, setModelAbrv]);
 
@@ -54,6 +34,13 @@ const VehicleEdit = () => {
         ModelAbrv: modelAbrv
       }
 
+      const mergedData = {
+        MakeName: makeName,
+        MakeAbrv: makeAbrv,
+        ModelName: modelName,
+        ModelAbrv: modelAbrv,
+      }
+
       if (makeName.trim().length < 1 || makeAbrv.trim().length < 1
           || modelName.trim().length < 1 || modelAbrv.trim().length < 1) {
         alert('Please enter a valid input');
@@ -62,12 +49,12 @@ const VehicleEdit = () => {
 
       await updateMake(makeDocRef, makeData);
       await updateModel(modelDocRef, modelData);
-
+      await updateMerged(mergedDocRef, mergedData);
       
     } catch (error) {
       console.error('Error while updating vehicle: ', error);
     }
-    window.location.href = '/vehicles';
+     window.location.href = '/vehicles';
 
   };
 

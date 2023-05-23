@@ -1,11 +1,10 @@
 import Link from "next/link";
-import styles from "../app/Components/VehicleList.module.css";
-
+import styles from "./frontPage.module.css"
 
 const Home = () => {
 	return (
 		<div>
-			<Link className={styles.toApp} href="/vehicles/pages?page=1">Go To Vehicle App</Link>
+			<Link className={styles.toApp}  href="/vehicles">Go To Vehicle App</Link>
 			
 		</div>
 	);

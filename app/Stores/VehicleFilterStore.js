@@ -6,21 +6,21 @@ class VehicleFilterStoreImpl {
     filteredData = [];
     currentPage = 1;
     search = "";
-    paginatedTable = [];
+    number = 1;
     
     constructor(){
         makeObservable(this, {
             filteredData: observable,
             currentPage: observable,
             search: observable,
-            paginatedTable: observable,
+            number: observable,
+            
             setFilteredData: action.bound,
             setCurrentPage: action.bound,
             setSearch: action.bound,
-            setPaginatedTable: action.bound
+            setNumber: action.bound
         })
     }
-
 
     setFilteredData(data){
         this.filteredData = data;
@@ -34,8 +34,8 @@ class VehicleFilterStoreImpl {
         this.search = value;
     }
 
-    setPaginatedTable(table){
-        this.paginatedTable = table;
+    setNumber(value){
+        this.number = value;
     }
 
 }

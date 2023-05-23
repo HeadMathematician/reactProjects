@@ -1,17 +1,17 @@
 "use client";
 
 import React from "react";
-import VehicleService from "../Services/VehicleService";
 import VehicleFormStore from "../Stores/VehicleFormStore";
 import styles from "./VehicleForm.module.css";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import { createModel } from "../Services/VehicleModelService";
 import { createMake } from "../Services/VehicleMakeService";
+import { createMerged } from "../Services/VehicleMergedService";
+import { getNumberOfRows, updateNumberOfRows } from "../Services/DataProcessingService";
 
-
-const VehicleForm = (props) => {
-	const vehicleService = new VehicleService();
+const VehicleForm = () => {
+	
 	const { modelName, makeName, modelAbrv, makeAbrv, setMakeAbrv, 
 	setMakeName, setModelAbrv, setModelName } = VehicleFormStore;
 
@@ -50,6 +50,15 @@ const VehicleForm = (props) => {
 			ModelAbrv: modelAbrv,
 		}
 
+		const vehicleMergedData = {
+			MakeID: MAKE_ID,
+			MakeName: makeName,
+			MakeAbrv: makeAbrv,
+			ModelID: MODEL_ID,
+			ModelName: modelName,
+			ModelAbrv: modelAbrv,
+		}
+
         if (makeName.trim().length < 1 || makeAbrv.trim().length < 1 
 			|| modelName.trim().length < 1 || modelAbrv.trim().length < 1) {
             alert('Please enter a valid input');
@@ -58,8 +67,13 @@ const VehicleForm = (props) => {
 
 		await createMake(vehicleMakeData);
 		await createModel(vehicleModelData);
+		await createMerged(vehicleMergedData);
+
+		const newNumberOfRows = (await getNumberOfRows()) + 1;
+		await updateNumberOfRows(newNumberOfRows);
+		
         
-        window.location.href = '/vehicles/pages?page=1';
+        window.location.href = '/vehicles';
 	};
 
 	return (
