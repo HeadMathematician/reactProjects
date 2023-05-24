@@ -19,8 +19,8 @@ class VehicleMergeViewStoreImpl {
             search: observable,
             currentPage: observable,
             flag: observable,
-            fetchData: observable,
 
+            fetchData: action.bound,
             setSearch: action.bound,
             setNumber: action.bound,
             setCurrentPage: action.bound,

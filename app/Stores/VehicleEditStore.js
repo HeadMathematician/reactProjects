@@ -22,6 +22,8 @@ class VehicleEditStoreImpl {
       makeDocRef:observable,
       modelDocRef:observable,
       mergedDocRef:observable,
+
+      fetchData: action.bound,
       setMergedDocRef:action.bound,
       setMakeDocRef: action.bound,
       setModelDocRef:action.bound,

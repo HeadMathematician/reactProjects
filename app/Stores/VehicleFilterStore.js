@@ -13,10 +13,9 @@ class VehicleFilterStoreImpl {
             filteredData: observable,
             currentPage: observable,
             search: observable,
-            
             number: observable,
-            fetchData: observable,
             
+            fetchData: action.bound,
             setFilteredData: action.bound,
             setCurrentPage: action.bound,
             setSearch: action.bound,
@@ -61,7 +60,6 @@ class VehicleFilterStoreImpl {
           console.error(error);
         }
       };
-
 }
 
 
