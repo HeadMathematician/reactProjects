@@ -15,9 +15,7 @@ const countRef = "SnisbxjkwINE3nl7Nqa8"
 const getFilteredTable = async (currentPage, value) => {
 	try {
 		if(value == ""){
-			const response = await fetch(`http://localhost:8080/paginateData?pageSize=${10}&page=${currentPage}&sortBy=asc`);
-			const data = await response.json();
-			return data.length;
+			return await getNumberOfRows();
 		}
 		else{
 			const allData = await getMerged();

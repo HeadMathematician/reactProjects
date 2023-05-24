@@ -51,7 +51,20 @@ app.get('/filterData/', async (req, res) => {
     const offset = (page - 1) * pageSize;
     const searchValue = (req.query.searchValue) || '';
 
-    const snapshot = await admin.firestore()
+    if(searchValue==""){
+      const snapshot = await admin.firestore()
+      .collection('VehicleMerged')
+      .orderBy("MakeName")
+      .limit(pageSize)
+      .offset(offset)
+      .get();
+
+    const data = snapshot.docs.map(doc => doc.data());
+    res.json(data);
+    }
+
+    else{
+      const snapshot = await admin.firestore()
       .collection('VehicleMerged')
       .orderBy('MakeName')
       .where('MakeName', '==', searchValue)
@@ -62,6 +75,9 @@ app.get('/filterData/', async (req, res) => {
     const data = snapshot.docs.map(doc => doc.data());
 
     res.json(data);
+    }
+
+    
   } catch (error) {
     console.error('Error retrieving paginated data:', error);
     res.status(500).json({ error: 'Something went wrong' });
