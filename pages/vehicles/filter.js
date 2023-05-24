@@ -17,7 +17,7 @@ const Filter = () => {
             setCurrentPage, setFilteredData, fetchData } = VehicleFilterStore
 
     useEffect(() =>{
-        fetchData(currentPage);
+        fetchData();
     }, [currentPage ]);
 
     const handlePageChange = (currentPage) => {

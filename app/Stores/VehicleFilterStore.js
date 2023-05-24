@@ -13,6 +13,7 @@ class VehicleFilterStoreImpl {
             filteredData: observable,
             currentPage: observable,
             search: observable,
+            
             number: observable,
             fetchData: observable,
             
@@ -31,29 +32,31 @@ class VehicleFilterStoreImpl {
     setCurrentPage(page){
         this.currentPage = page;
     }
-
+    
     setSearch(value){
         this.search = value;
     }
+    
 
     setNumber(value){
         this.number = value;
     }
 
 
-    fetchData = async (currentPage) => {
+    fetchData = async () => {
         try {
           const urlParams = new URLSearchParams(window.location.search);
           const search = urlParams.get("search");
+
+          this.setSearch(search);
     
-          const response = await fetch(`http://localhost:8080/filterData?pageSize=10&page=${currentPage}&searchValue=${search}`);
+          const response = await fetch(`http://localhost:8080/filterData?pageSize=10&page=${this.currentPage}&searchValue=${search}`);
           const data = await response.json();
     
-          const number = await getFilteredTable(currentPage, search);
+          const number = await getFilteredTable(this.currentPage, search);
           this.setNumber(number);
     
           this.setFilteredData(data);
-          this.setSearch(search);
         } catch (error) {
           console.error(error);
         }
