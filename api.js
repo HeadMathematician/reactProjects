@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 app.get('/paginateData', async (req, res) => {
   try {
     const pageSize = parseInt(req.query.pageSize) || 10; 
-    const page = parseInt(req.query.page) || 2;
+    const page = parseInt(req.query.page) || 1;
     const offset = (page - 1) * pageSize;
     const sortBy = req.query.sortBy
 
@@ -47,7 +47,7 @@ app.get('/paginateData', async (req, res) => {
 app.get('/filterData/', async (req, res) => {
   try {
     const pageSize = parseInt(req.query.pageSize) || 10;
-    const page = parseInt(req.query.page) || 2;
+    const page = parseInt(req.query.page) || 1;
     const offset = (page - 1) * pageSize;
     const searchValue = (req.query.searchValue) || '';
 
