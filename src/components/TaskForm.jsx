@@ -20,6 +20,11 @@ const TaskForm = ({ addTask }) => {
       return;
     }
 
+    if(data.trim().length > 25){
+      alert("You can not enter more than 25 characters");
+      return;
+    }
+
     await createDocument(taskData);
     addTask(taskData);
     setData("");
