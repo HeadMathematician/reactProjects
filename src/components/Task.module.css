@@ -1,0 +1,90 @@
+.task {
+    display: flex;
+    align-items: center;
+    background-color: #FFC1C1;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    max-width:360px;
+    margin:4px;
+    position:relative;
+    color: #333333;
+  }
+  
+  .task input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  .task label {
+    flex-grow: 1;
+    margin-left: 10px;
+  }
+
+  .buttons{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    
+  }
+
+  .edit {
+    font-size: 20px;
+    border: none;
+    background-color: transparent;
+    color: rgb(163, 163, 84);
+    margin: 0 4px;
+  }
+  
+  .edit:hover {
+    background-color: lightgray;
+    color: white;
+  }
+  
+  .done {
+    font-size: 20px;
+    border: none;
+    background-color: transparent;
+    color: rgb(54, 236, 54);
+    margin: 0 4px;
+  }
+  
+  .done:hover {
+    background-color: lightgreen;
+    color: white;
+  }
+  
+  
+  .saveButton {
+    font-size: 20px;
+    border: none;
+    background-color: transparent;
+    color: rgb(163, 163, 84);
+    margin-left: 4px;
+    cursor: pointer;
+  }
+
+  .saveButtonContainer {
+    position: absolute;
+    right: 0;
+    margin-right:14px;
+    margin-top:4px;
+  }
+
+  .saveButton:hover {
+    background-color: rgb(163, 163, 84);
+    color:white;
+}
+
+.removeTask{
+  border:none;
+  background-color:transparent;
+  color: red;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.removeTask:hover{
+  color:white;
+  background-color:red;
+}

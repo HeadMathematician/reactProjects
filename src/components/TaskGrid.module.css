@@ -1,0 +1,18 @@
+.taskContainer{
+  background-color: #F2F2F2 ;
+  padding:8px 8px;
+  border-radius:10px;
+
+  display:flex;
+  flex-direction:column;
+  max-width:360px;
+}
+
+.gridContainer{
+  margin-left: 10px;
+}
+
+h3{
+  margin-left:120px;
+}
+  

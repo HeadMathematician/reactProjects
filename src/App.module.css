@@ -1,0 +1,12 @@
+
+.tasksContainer{
+  display:flex;
+  flex-direction: row;
+  margin-left:5%;
+}
+
+
+.tasksContainer > * {
+  flex-grow: 0;
+  flex-basis: 30%;
+}
